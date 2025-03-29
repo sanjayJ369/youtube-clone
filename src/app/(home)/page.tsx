@@ -1,7 +1,18 @@
-export default function Home() {
+import { HydrateClient, trpc } from "@/trpc/server";
+import { PageClient } from "./client";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+export default async function Home() {
+  void trpc.hello.prefetch({ text: "youtube-clone" });
+
   return (
-    <div className="flex gap-4">
-      <p className="text-xl font-semibold tracking-tight">TODO: video feed</p>
-    </div>
+    <HydrateClient>
+      <Suspense fallback={<p>loading....</p>}>
+        <ErrorBoundary fallback={<p>error</p>}>
+          <PageClient />
+        </ErrorBoundary>
+      </Suspense>
+    </HydrateClient>
   );
 }
